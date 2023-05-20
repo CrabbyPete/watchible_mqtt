@@ -1,0 +1,15 @@
+[Unit]
+Description=Watchible MQTT Client
+
+Wants=network.target
+After=syslog.target network-online.target
+
+[Service]
+Type=simple
+ExecStart=/home/ubuntu/watchible_mqtt/bin/python /home/ubuntu/watchible_mqtt/watchible_mqtt/main.py
+Restart=on-failure
+RestartSec=10
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target
