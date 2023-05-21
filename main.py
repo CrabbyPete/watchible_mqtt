@@ -1,23 +1,25 @@
-import json
-import uuid
-import boto3
+import logging
 import paho.mqtt.client as mqtt
+
+
+log = logging.getLogger('watchible_mqtt')
+log.setLevel(logging.INFO)
 
 from models.telemetry import Telemetry
 from models.mongo_telemetry import MongoTelemetry
 
 def on_connect(client, userdata, flags, rc):  # The callback for when the client connects to the broker
-    print("Connected with result code {0}".format(str(rc)))  # Print result of connection attempt
+    log.info("Connected with result code {0}".format(str(rc)))  # Print result of connection attempt
     client.subscribe("device/state")  # Subscribe to the topic “digitest/test1”, receive any messages published on it
 
 
 def on_message(client, userdata, msg):  # The callback for when a PUBLISH message is received from the server.
-    print("Message-> " + msg.topic + " " + str(msg.payload))  # Print a received msg
+    log.info("Message-> " + msg.topic + " " + str(msg.payload))  # Print a received msg
 
     try:
         msg_str = msg.payload.decode('utf-8')
     except Exception as e:
-        print(f"Error jsonifing {msg}")
+        log.error(f"Error jsonifing {msg}")
         return
 
     try:
@@ -25,14 +27,14 @@ def on_message(client, userdata, msg):  # The callback for when a PUBLISH messag
         telemetry.convert(msg_str)
         ok = telemetry.save()
     except Exception as e:
-        print(f"Error converting {msg_str} to Dynamo")
+        log.error(f"Error converting {msg_str} to Dynamo")
 
     try:
         mongo_telemetry = MongoTelemetry()
         mongo_telemetry.convert(msg_str)
         mongo_telemetry.save()
     except Exception as e:
-        print(f"Error converting {msg_str} to MongoDB")
+        log.error(f"Error converting {msg_str} to MongoDB")
 
 
 client = mqtt.Client()  # Create instance of client with client ID “digi_mqtt_test”
