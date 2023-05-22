@@ -27,14 +27,14 @@ def on_message(client, userdata, msg):  # The callback for when a PUBLISH messag
         telemetry.convert(msg_str)
         ok = telemetry.save()
     except Exception as e:
-        log.error(f"Error converting {msg_str} to Dynamo")
+        log.error(f"Error {str(e)} converting {msg_str} to Dynamo")
 
     try:
         mongo_telemetry = MongoTelemetry()
         mongo_telemetry.convert(msg_str)
         mongo_telemetry.save()
     except Exception as e:
-        log.error(f"Error converting {msg_str} to MongoDB")
+        log.error(f"Error {str(e)} converting {msg_str} to MongoDB")
 
 
 client = mqtt.Client()  # Create instance of client with client ID “digi_mqtt_test”
