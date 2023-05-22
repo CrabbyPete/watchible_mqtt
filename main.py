@@ -25,7 +25,7 @@ def on_message(client, userdata, msg):  # The callback for when a PUBLISH messag
     try:
         telemetry = Telemetry()
         telemetry.convert(msg_str)
-        ok = telemetry.save()
+        telemetry.save()
     except Exception as e:
         log.error(f"Error {str(e)} converting {msg_str} to Dynamo")
 
