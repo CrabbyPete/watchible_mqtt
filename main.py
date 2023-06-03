@@ -21,14 +21,14 @@ def on_message(client, userdata, msg):  # The callback for when a PUBLISH messag
     except Exception as e:
         log.error(f"Error jsonifing {msg}")
         return
-
+    '''
     try:
         telemetry = Telemetry()
         telemetry.convert(msg_str)
         telemetry.save()
     except Exception as e:
         log.error(f"Error {str(e)} converting {msg_str} to Dynamo")
-
+    '''
     try:
         mongo_telemetry = MongoTelemetry()
         mongo_telemetry.convert(msg_str)
