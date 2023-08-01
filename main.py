@@ -1,9 +1,9 @@
 import logging
 import paho.mqtt.client as mqtt
 
-
+log_format = '[%(asctime)s] [%(levelname)s] - %(message)s'
+logging.basicConfig(level=logging.INFO, format=log_format)
 log = logging.getLogger('watchible_mqtt')
-log.setLevel(logging.INFO)
 
 from models.telemetry import Telemetry
 from models.mongo_telemetry import MongoTelemetry
@@ -36,7 +36,7 @@ def on_message(client, userdata, msg):  # The callback for when a PUBLISH messag
     except Exception as e:
         log.error(f"Error {str(e)} converting {msg_str} to MongoDB")
 
-
+log.info("Listening")
 client = mqtt.Client()  # Create instance of client with client ID “digi_mqtt_test”
 #client.tls_set(ca_certs='mosquitto.org.crt', tls_version=mqtt.ssl.PROTOCOL_TLS)
 client.on_connect = on_connect  # Define callback function for successful connection
